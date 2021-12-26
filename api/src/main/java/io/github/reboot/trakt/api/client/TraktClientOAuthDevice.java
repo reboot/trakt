@@ -59,9 +59,10 @@ public class TraktClientOAuthDevice {
      * @throws TraktClientException If an error occurs during the request.
      */
     public CodeResponse code() throws TraktClientException {
+        TraktClientCall call = new TraktClientCall("/oauth/device/code");
         CodeRequest request = new CodeRequest();
         request.setClientId(support.getClientId());
-        return support.doAuthRequest("/oauth/device/code", new BasicResponseTransformer<CodeResponse>(support, CodeResponse.class), request);
+        return support.doUnauthenticatedRequest(call, new BasicResponseTransformer<CodeResponse>(support, CodeResponse.class), request);
     }
 
     /**
@@ -75,6 +76,7 @@ public class TraktClientOAuthDevice {
      * @throws TraktClientException If an error occurs during the request.
      */
     public TokenResponse token(String code) throws TraktClientException {
+        TraktClientCall call = new TraktClientCall("/oauth/device/token");
         TokenRequest request = new TokenRequest();
         request.setCode(code);
         request.setClientId(support.getClientId());
@@ -114,7 +116,7 @@ public class TraktClientOAuthDevice {
             }
 
         };
-        return support.doAuthRequest("/oauth/device/token", responseTransformer, request);
+        return support.doUnauthenticatedRequest(call, responseTransformer, request);
     }
 
 }

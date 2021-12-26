@@ -111,31 +111,30 @@ public class TraktClient {
      * @throws TraktClientException If an error occurs during the request.
      */
     public Paginated<SearchResponse> search(Collection<SearchResult.Type> types, RequestParameter... parameters) throws TraktClientException {
-        StringBuilder url = new StringBuilder();
-        url.append("/search/");
+        TraktClientCall call = new TraktClientCall("/search/");
         boolean firstType = true;
         for (SearchResult.Type type : types) {
             if (!firstType) {
-                url.append(",");
+                call.append(",");
             } else {
                 firstType = false;
             }
             switch (type) {
             case MOVIE:
-                url.append("movie");
+                call.append("movie");
                 break;
             case SHOW:
-                url.append("show");
+                call.append("show");
                 break;
             case EPISODE:
-                url.append("episode");
+                call.append("episode");
                 break;
             default:
                 throw new AssertionError(type);
             }
         }
-        support.appendRequestParameters(url, true, parameters);
-        return support.doAPIRequest(url.toString(), new PaginatedResponseTransformer<>(support, SearchResponse.class), null);
+        call.appendRequestParameters(parameters);
+        return support.doAuthenticatedRequest(call, new PaginatedResponseTransformer<>(support, SearchResponse.class), null);
     }
 
 }

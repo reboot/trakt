@@ -121,7 +121,7 @@ public class TraktClientOAuth {
             }
 
         };
-        return support.doAuthRequest("/oauth/token", responseTransformer, request);
+        return support.doUnauthenticatedRequest(new TraktClientCall("/oauth/token"), responseTransformer, request);
     }
 
 }
